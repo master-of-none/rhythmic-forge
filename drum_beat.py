@@ -22,6 +22,23 @@ class Kick:
 # Add up the filtered noises for generating snare sound. OOFF!!!
 
 
+class Snare:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_noise(self):
+        pass
+
+    def generate_sine(self):
+        pass
+
+    def create_filter(self):
+        pass
+
+    def generate_snare_sound(self):
+        pass
+
+
 if __name__ == '__main__':
     kick = Kick()
     frequency = 30
