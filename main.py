@@ -1,7 +1,9 @@
 import tkinter as tk
 import sounddevice as sd
-import drum_beat
 from scipy.io import wavfile
+
+from drum_beat import Kick
+
 
 class DrumMachine:
     def __init__(self):
@@ -18,6 +20,7 @@ class DrumMachine:
 
         self.root.geometry(f"{window_width}x{window_height}+{window_position_x}+{window_position_y}")
 
+        self.kick = Kick()
         self.setup_gui()
         self.root.mainloop()
 
@@ -31,7 +34,7 @@ class DrumMachine:
     def play_drum(self):
         frequency = 30
         duration = 150
-        sound = drum_beat.kick(frequency, duration)
+        sound = self.kick.generate_kick_sound(frequency, duration)
         wavfile.write("kick.wav", 44100, sound)
         sd.play(sound, samplerate=44100)
         sd.wait()
