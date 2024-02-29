@@ -16,6 +16,11 @@ class Kick:
         filtered = sosfilt(sos, oscillation)
         return filtered * 3
 
+# Next is to generate snare sound
+# For this what I can do is generate a noise with an envelope, generate a sine wave with an envelope
+# Make 2 high pass filters (Must think more about this), pass noise and sine to filter,
+# Add up the filtered noises for generating snare sound. OOFF!!!
+
 
 if __name__ == '__main__':
     kick = Kick()
