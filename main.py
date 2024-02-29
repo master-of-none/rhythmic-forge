@@ -1,7 +1,7 @@
-import numpy as np
 import tkinter as tk
 import sounddevice as sd
-
+import drum_beat
+from scipy.io import wavfile
 
 class DrumMachine:
     def __init__(self):
@@ -29,12 +29,12 @@ class DrumMachine:
         self.quit_button.pack()
 
     def play_drum(self):
-        duration = 0.5
-        frequency = 400
-        volume = 0.5
-        samples = (np.sin(2 * np.pi * np.arange(44100 * duration) * frequency / 44100)).astype(np.float32)
-
-        sd.play(volume * samples, samplerate=44100)
+        frequency = 30
+        duration = 150
+        sound = drum_beat.kick(frequency, duration)
+        wavfile.write("kick.wav", 44100, sound)
+        sd.play(sound, samplerate=44100)
+        sd.wait()
 
     def quit(self):
         self.root.destroy()
