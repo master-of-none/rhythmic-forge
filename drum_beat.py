@@ -41,7 +41,9 @@ class Snare:
         wavfile.write('sine.wav', self.sample_rate, envelope * oscillation)
 
     def create_filter(self):
-        pass
+        sos_high_pass = butter(4, 20, 'hp', fs=self.sample_rate, output='sos')
+        sos_band_pass = butter(1, [5, 40], 'bp', fs=self.sample_rate, output='sos')
+        return sos_high_pass, sos_band_pass
 
     def generate_snare_sound(self):
         pass
