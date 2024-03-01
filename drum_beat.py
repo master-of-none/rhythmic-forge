@@ -1,6 +1,7 @@
 import numpy as np
 import sounddevice as sd
 from scipy.signal import butter, sosfilt
+from scipy.io import wavfile
 
 
 class Kick:
@@ -16,6 +17,7 @@ class Kick:
         filtered = sosfilt(sos, oscillation)
         return filtered * 3
 
+
 # Next is to generate snare sound
 # For this what I can do is generate a noise with an envelope, generate a sine wave with an envelope
 # Make 2 high pass filters (Must think more about this), pass noise and sine to filter,
@@ -26,8 +28,11 @@ class Snare:
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
-    def generate_noise(self):
-        pass
+    def generate_noise(self, duration):
+        time = np.linspace(0, 1, int(self.sample_rate * duration / 1000))
+        noise = np.random.random(int(self.sample_rate * duration / 1000)) * 2 - 1
+        envelope = np.power(0.5, 25 * time)
+        wavfile.write('noise.wav', self.sample_rate, noise * envelope)
 
     def generate_sine(self):
         pass
@@ -40,9 +45,11 @@ class Snare:
 
 
 if __name__ == '__main__':
-    kick = Kick()
+    # kick = Kick()
     frequency = 30
     duration = 150
-    sound = kick.generate_kick_sound(frequency, duration)
-    sd.play(sound, kick.sample_rate)
-    sd.wait()
+    # sound = kick.generate_kick_sound(frequency, duration)
+    # sd.play(sound, kick.sample_rate)
+    # sd.wait()
+    snare = Snare()
+    snare.generate_noise(duration)
