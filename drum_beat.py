@@ -34,8 +34,11 @@ class Snare:
         envelope = np.power(0.5, 25 * time)
         wavfile.write('noise.wav', self.sample_rate, noise * envelope)
 
-    def generate_sine(self):
-        pass
+    def generate_sine(self, frequency, duration):
+        time = np.linspace(0, 1, int(self.sample_rate * duration / 1000))
+        envelope = np.power(0.5, 25 * time)
+        oscillation = frequency * np.sin(2 * np.pi * frequency * time)
+        wavfile.write('sine.wav', self.sample_rate, envelope * oscillation)
 
     def create_filter(self):
         pass
@@ -53,3 +56,4 @@ if __name__ == '__main__':
     # sd.wait()
     snare = Snare()
     snare.generate_noise(duration)
+    snare.generate_sine(frequency, duration)
