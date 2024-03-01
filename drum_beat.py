@@ -55,10 +55,33 @@ class Snare:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_sine = sosfilt(sos_band_pass, sine)
         snare_sound = (filtered_noise + filtered_sine) * 4
-        #wavfile.write("snare_sound.wav", self.sample_rate, snare_sound)
+        # wavfile.write("snare_sound.wav", self.sample_rate, snare_sound)
         return snare_sound
 
-# if __name__ == '__main__':
+
+# Third step is to generate the hi hat sound Steps here are nearly same as snare. First generate the noise,
+# Hi hat uses square tone hence can generate square wave, create a filter and finally figure out what to do with
+# filtered signals
+
+class HiHat:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_noise(self):
+        pass
+
+    def generate_square_tone(self):
+        pass
+
+    def create_filter(self):
+        pass
+
+    def generate_hi_hat(self):
+        pass
+
+
+if __name__ == '__main__':
+    pass
 #     kick = Kick()
 #     frequency = 30
 #     duration = 150
