@@ -29,18 +29,19 @@ class Snare:
         self.sample_rate = sample_rate
 
     def generate_noise(self, duration):
-        time = np.linspace(0, 1, int(self.sample_rate * duration / 1000))
-        noise = np.random.random_sample(int(self.sample_rate * duration / 1000)) * 2 - 1
+        time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
+        noise = np.random.random_sample(int((self.sample_rate / 1000) * duration)) * 2 - 1
         envelope = np.power(0.5, 12.5 * time)
         # wavfile.write('noise.wav', self.sample_rate, noise * envelope)
         return noise * envelope
 
     def generate_sine(self, frequency, duration):
-        time = np.linspace(0, 1, int(self.sample_rate * duration / 1000))
+        num_samples = int((self.sample_rate / 1000) * duration)
+        time = np.linspace(0, duration / 1000, num_samples)
         envelope = np.power(0.5, 25 * time)
-        oscillation = 1 * np.sin(2 * np.pi * frequency * time)
-        # wavfile.write('sine.wav', self.sample_rate, envelope * oscillation)
-        return envelope * oscillation
+        t = np.arange(num_samples) / self.sample_rate
+        oscillation = 1 * np.sin(2 * np.pi * frequency * t) * envelope
+        return oscillation
 
     def create_filter(self):
         sos_high_pass = butter(4, 20, 'hp', fs=1000, analog=False, output='sos')
@@ -59,10 +60,11 @@ class Snare:
 
 if __name__ == '__main__':
     kick = Kick()
-    frequency = 250
+    frequency = 30
     duration = 150
     sound = kick.generate_kick_sound(frequency, duration)
     # sd.play(sound, kick.sample_rate)
     # sd.wait()
+    frequency = 250
     snare = Snare()
     snare.generate_snare_sound(frequency, duration)
