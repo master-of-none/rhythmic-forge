@@ -2,8 +2,7 @@ import tkinter as tk
 import sounddevice as sd
 from scipy.io import wavfile
 
-from drum_beat import Kick
-
+from drum_beat import *
 
 class DrumMachine:
     def __init__(self):
@@ -21,22 +20,33 @@ class DrumMachine:
         self.root.geometry(f"{window_width}x{window_height}+{window_position_x}+{window_position_y}")
 
         self.kick = Kick()
+        self.snare = Snare()
         self.setup_gui()
         self.root.mainloop()
 
     def setup_gui(self):
-        self.play_button = tk.Button(self.root, text="Play", command=self.play_drum)
+        self.play_button = tk.Button(self.root, text="Play Kick Sound", command=self.play_kick)
+        self.play_button.pack()
+
+        self.play_button = tk.Button(self.root, text="Play Snare Sound", command=self.play_snare)
         self.play_button.pack()
 
         self.quit_button = tk.Button(self.root, text="Quit", command=self.quit)
         self.quit_button.pack()
 
-    def play_drum(self):
+    def play_kick(self):
         frequency = 30
         duration = 150
         sound = self.kick.generate_kick_sound(frequency, duration)
-        wavfile.write("kick.wav", 44100, sound)
+        #wavfile.write("kick.wav", 44100, sound)
         sd.play(sound, samplerate=44100)
+        sd.wait()
+
+    def play_snare(self):
+        frequency = 250
+        duration = 150
+        snare_sound = self.snare.generate_snare_sound(frequency, duration)
+        sd.play(snare_sound, samplerate=44100)
         sd.wait()
 
     def quit(self):

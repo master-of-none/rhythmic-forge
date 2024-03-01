@@ -55,16 +55,16 @@ class Snare:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_sine = sosfilt(sos_band_pass, sine)
         snare_sound = (filtered_noise + filtered_sine) * 4
-        wavfile.write("snare_sound.wav", self.sample_rate, snare_sound)
+        #wavfile.write("snare_sound.wav", self.sample_rate, snare_sound)
+        return snare_sound
 
-
-if __name__ == '__main__':
-    kick = Kick()
-    frequency = 30
-    duration = 150
-    sound = kick.generate_kick_sound(frequency, duration)
-    # sd.play(sound, kick.sample_rate)
-    # sd.wait()
-    frequency = 250
-    snare = Snare()
-    snare.generate_snare_sound(frequency, duration)
+# if __name__ == '__main__':
+#     kick = Kick()
+#     frequency = 30
+#     duration = 150
+#     sound = kick.generate_kick_sound(frequency, duration)
+#     # sd.play(sound, kick.sample_rate)
+#     # sd.wait()
+#     frequency = 250
+#     snare = Snare()
+#     snare.generate_snare_sound(frequency, duration)
