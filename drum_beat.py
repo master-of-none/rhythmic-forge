@@ -132,6 +132,21 @@ class OpenHat:
         return open_hat_sound
 
 
+# Wood Block
+# This sound seems difficult to generate, I have no clue as if now how to work on this
+# I have to use sine or square tone to generate. Probably need to watch YouTube to understand more about woodblock
+
+class WoodBlock:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_a_wave(self, duration):
+        pass
+
+    def generate_woodblock(self, duration):
+        pass
+
+
 if __name__ == '__main__':
     pass
     #     kick = Kick()
