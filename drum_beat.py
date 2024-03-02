@@ -92,8 +92,28 @@ class HiHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         hi_hat_sound = filtered_wave_2 * time * 4
-        #wavfile.write('hi_hat_sound.wav', self.sample_rate, hi_hat_sound)
+        # wavfile.write('hi_hat_sound.wav', self.sample_rate, hi_hat_sound)
         return hi_hat_sound
+
+
+# Open Hat is similar as Hi hat with some variations in the creating the filter
+# Most functions are same with some variations, implementing initial version
+
+class OpenHat:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_noise(self, duration):
+        pass
+
+    def generate_square_tone(self, frequency, duration):
+        pass
+
+    def create_filter(self):
+        pass
+
+    def generate_open_hat(self, duration):
+        pass
 
 
 if __name__ == '__main__':
