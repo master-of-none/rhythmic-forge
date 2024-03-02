@@ -20,9 +20,12 @@ class DrumMachine:
 
         self.root.geometry(f"{window_width}x{window_height}+{window_position_x}+{window_position_y}")
 
+        self.duration = 150
+        self.samplerate = 44100
         self.kick = Kick()
         self.snare = Snare()
         self.hi_hat = HiHat()
+        self.open_hat = OpenHat()
         self.setup_gui()
         self.root.mainloop()
 
@@ -36,29 +39,33 @@ class DrumMachine:
         self.play_button = tk.Button(self.root, text="Play HiHat Sound", command=self.play_hi_hat)
         self.play_button.pack()
 
+        self.play_button = tk.Button(self.root, text="Play OpenHat Sound", command=self.play_open_hat)
+        self.play_button.pack()
+
         self.quit_button = tk.Button(self.root, text="Quit", command=self.quit)
         self.quit_button.pack()
 
     def play_kick(self):
         frequency = 30
-        duration = 150
-        sound = self.kick.generate_kick_sound(frequency, duration)
+        sound = self.kick.generate_kick_sound(frequency, self.duration)
         # wavfile.write("kick.wav", 44100, sound)
-        sd.play(sound, samplerate=44100)
+        sd.play(sound, self.samplerate)
         sd.wait()
 
     def play_snare(self):
         frequency = 250
-        duration = 150
-        snare_sound = self.snare.generate_snare_sound(frequency, duration)
-        sd.play(snare_sound, samplerate=44100)
+        snare_sound = self.snare.generate_snare_sound(frequency, self.duration)
+        sd.play(snare_sound, self.samplerate)
         sd.wait()
 
     def play_hi_hat(self):
-        duration = 150
-        hi_hat = self.hi_hat.generate_hi_hat(duration)
-        sd.play(hi_hat, samplerate=44100)
+        hi_hat = self.hi_hat.generate_hi_hat(self.duration)
+        sd.play(hi_hat, self.samplerate)
         sd.wait()
 
+    def play_open_hat(self):
+        open_hat = self.open_hat.generate_open_hat(self.duration)
+        sd.play(open_hat, self.samplerate)
+        sd.wait()
     def quit(self):
         self.root.destroy()
