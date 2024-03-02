@@ -4,6 +4,7 @@ from scipy.io import wavfile
 
 from drum_beat import *
 
+
 class DrumMachine:
     def __init__(self):
         self.root = tk.Tk()
@@ -21,6 +22,7 @@ class DrumMachine:
 
         self.kick = Kick()
         self.snare = Snare()
+        self.hi_hat = HiHat()
         self.setup_gui()
         self.root.mainloop()
 
@@ -31,6 +33,9 @@ class DrumMachine:
         self.play_button = tk.Button(self.root, text="Play Snare Sound", command=self.play_snare)
         self.play_button.pack()
 
+        self.play_button = tk.Button(self.root, text="Play HiHat Sound", command=self.play_hi_hat)
+        self.play_button.pack()
+
         self.quit_button = tk.Button(self.root, text="Quit", command=self.quit)
         self.quit_button.pack()
 
@@ -38,7 +43,7 @@ class DrumMachine:
         frequency = 30
         duration = 150
         sound = self.kick.generate_kick_sound(frequency, duration)
-        #wavfile.write("kick.wav", 44100, sound)
+        # wavfile.write("kick.wav", 44100, sound)
         sd.play(sound, samplerate=44100)
         sd.wait()
 
@@ -47,6 +52,12 @@ class DrumMachine:
         duration = 150
         snare_sound = self.snare.generate_snare_sound(frequency, duration)
         sd.play(snare_sound, samplerate=44100)
+        sd.wait()
+
+    def play_hi_hat(self):
+        duration = 150
+        hi_hat = self.hi_hat.generate_hi_hat(duration)
+        sd.play(hi_hat, samplerate=44100)
         sd.wait()
 
     def quit(self):

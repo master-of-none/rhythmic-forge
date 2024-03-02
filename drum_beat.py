@@ -92,7 +92,8 @@ class HiHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         hi_hat_sound = filtered_wave_2 * time * 4
-        wavfile.write('hi_hat_sound.wav', self.sample_rate, hi_hat_sound)
+        #wavfile.write('hi_hat_sound.wav', self.sample_rate, hi_hat_sound)
+        return hi_hat_sound
 
 
 if __name__ == '__main__':
