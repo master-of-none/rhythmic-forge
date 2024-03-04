@@ -37,10 +37,10 @@ class Snare:
 
     def generate_sine(self, frequency, duration):
         num_samples = int((self.sample_rate / 1000) * duration)
-        time = np.linspace(0, duration / 1000, num_samples)
-        envelope = np.power(0.5, 25 * time)
-        t = np.arange(num_samples) / self.sample_rate
-        oscillation = 1 * np.sin(2 * np.pi * frequency * t) * envelope
+        normalized_time = np.linspace(0, duration / 1000, num_samples)
+        envelope = np.power(0.5, 25 * normalized_time)
+        actual_time = np.arange(num_samples) / self.sample_rate
+        oscillation = 1 * np.sin(2 * np.pi * frequency * actual_time) * envelope
         return oscillation
 
     def create_filter(self):
@@ -128,7 +128,7 @@ class OpenHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         open_hat_sound = filtered_wave_2 * time * 4
-        wavfile.write('open_hat_sound.wav', self.sample_rate, open_hat_sound)
+        #wavfile.write('open_hat_sound.wav', self.sample_rate, open_hat_sound)
         return open_hat_sound
 
 
@@ -140,27 +140,22 @@ class WoodBlock:
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
-    def generate_a_wave(self, duration):
-        pass
+    def generate_a_wave(self, frequency, duration):
+        normalized_time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
+        envelope = np.power(0.5, 25*normalized_time)
+        actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
+        oscillation = np.sin(2 * np.pi * frequency * actual_time)
+        return envelope * oscillation
 
-    def generate_woodblock(self, duration):
-        pass
+    def generate_woodblock(self, frequency, ratio, amount, duration):
+        frequency_modulation = frequency + self.generate_a_wave(frequency*ratio, duration) * amount
+        normalized_time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
+        envelope = np.power(0.5, 25 * normalized_time)
+        actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
+        woodblock = 1 * np.sin(2 * np.pi * frequency_modulation * actual_time) * envelope
+        wavfile.write('woodblock.wav', self.sample_rate, woodblock)
 
 
 if __name__ == '__main__':
-    pass
-    #     kick = Kick()
-    #     frequency = 30
-    #     duration = 150
-    #     sound = kick.generate_kick_sound(frequency, duration)
-    #     # sd.play(sound, kick.sample_rate)
-    #     # sd.wait()
-    #     frequency = 250
-    #     snare = Snare()
-    #     snare.generate_snare_sound(frequency, duration)
-    # hi_hat = HiHat()
-    # duration = 150
-    # hi_hat.generate_hi_hat(duration)
-    open_hat = OpenHat()
-    duration = 150
-    open_hat.generate_open_hat(duration)
+    woodblock = WoodBlock()
+    woodblock.generate_woodblock(880, 2.25, 80,duration=150)
