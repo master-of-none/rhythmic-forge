@@ -244,11 +244,35 @@ class Tambourine:
         sos_band_pass = self.create_filter()
         filtered_tambourine_sound = sosfilt(sos_band_pass, tambourine_sound)
         tambourine_sound = filtered_tambourine_sound * 1.5
-
-        wavfile.write('tambourine.wav', self.sample_rate, tambourine_sound)
         return tambourine_sound
 
 
+class Bongo:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_tone(self, frequency, duration):
+        num_samples = int((self.sample_rate / 1000) * duration)
+        time = np.linspace(0, duration / 1000, num_samples)
+        envelope = np.exp(-10 * time)
+        tone_signal = np.sin(2 * np.pi * frequency * time) * envelope
+        return tone_signal
+
+    def create_filter(self):
+        sos_band_pass = butter(4, [100, 2000], 'band', fs=self.sample_rate, output='sos')
+        return sos_band_pass
+
+    def generate_bongo_sound(self, duration):
+        low_tone = self.generate_tone(200, duration)
+        high_tone = self.generate_tone(400, duration)
+        bongo_sound = low_tone + high_tone
+        sos_band_pass = self.create_filter()
+        filtered_bongo_sound = sosfilt(sos_band_pass, bongo_sound)
+        bongo_sound = filtered_bongo_sound / np.max(np.abs(filtered_bongo_sound))
+        wavfile.write('bongo.wav', self.sample_rate, bongo_sound)
+        return bongo_sound
+
+
 if __name__ == '__main__':
-    tambourine = Tambourine()
-    tambourine.generate_tambourine_sound(duration=150)
+    bongo = Bongo()
+    bongo.generate_bongo_sound(150)
