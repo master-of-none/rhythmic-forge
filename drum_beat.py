@@ -15,7 +15,7 @@ class Kick:
         oscillation = exponential_decay * np.cos(envelope)
         sos = butter(2, 300, 'low', fs=self.sample_rate, output='sos')
         filtered = sosfilt(sos, oscillation)
-        return filtered * 3
+        return filtered * 10
 
 
 # Next is to generate snare sound
@@ -215,6 +215,7 @@ class Clap:
         clap_sound = filtered_noise * time * 2
         # wavfile.write("clap_sound.wav", self.sample_rate, clap_sound)
         return clap_sound
+
 
 if __name__ == '__main__':
     # woodblock = WoodBlock()
