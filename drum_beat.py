@@ -128,7 +128,7 @@ class OpenHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         open_hat_sound = filtered_wave_2 * time * 4
-        #wavfile.write('open_hat_sound.wav', self.sample_rate, open_hat_sound)
+        # wavfile.write('open_hat_sound.wav', self.sample_rate, open_hat_sound)
         return open_hat_sound
 
 
@@ -142,13 +142,13 @@ class WoodBlock:
 
     def generate_a_wave(self, frequency, duration):
         normalized_time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
-        envelope = np.power(0.5, 25*normalized_time)
+        envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
         oscillation = np.sin(2 * np.pi * frequency * actual_time)
         return envelope * oscillation
 
     def generate_woodblock(self, frequency, ratio, amount, duration):
-        frequency_modulation = frequency + self.generate_a_wave(frequency*ratio, duration) * amount
+        frequency_modulation = frequency + self.generate_a_wave(frequency * ratio, duration) * amount
         normalized_time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
         envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
@@ -156,6 +156,45 @@ class WoodBlock:
         wavfile.write('woodblock.wav', self.sample_rate, woodblock)
 
 
+# Mid-Tom
+# It took me 2 days to figure out woodblock and Mid-Tom and finally an algorithm kicked in after hours of debugging.
+class MidTom:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_noise(self, duration):
+        noise = np.random.random_sample(int((self.sample_rate / 1000) * duration)) * 2 - 1
+        return noise
+
+    def create_filter(self):
+        sos_high_pass = butter(10, 70, 'hp', fs=1000, analog=False, output='sos')
+        sos_low_pass = butter(2, 30, 'lp', fs=1000, analog=False, output='sos')
+        return sos_high_pass, sos_low_pass
+
+    def generate_sine_sweep(self, duration, start_frequency, end_frequency):
+        normalized_time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
+        sweep = (np.sqrt(start_frequency) + (np.sqrt(end_frequency) - np.sqrt(start_frequency)) * normalized_time)
+        sweep = np.power(sweep, 2)
+        actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
+        return np.sin(2 * np.pi * sweep * actual_time)
+
+    def generate_mid_tom_sound(self, frequency, duration):
+        time = np.linspace(1, 0, int((self.sample_rate / 1000) * duration))
+        time = np.power(time, 2.5)
+        noise = self.generate_noise(duration)
+        sos_high_pass, sos_low_pass = self.create_filter()
+        sine_sweep = self.generate_sine_sweep(duration, frequency + (frequency * 0.5), frequency)
+        sine_sweep = sine_sweep * time * 2.5
+        filtered_noise = sosfilt(sos_high_pass, noise)
+        filtered_noise_2 = sosfilt(sos_low_pass, filtered_noise)
+        mid_tom = sine_sweep + (filtered_noise_2 * time) * 0.085
+        # wavfile.write('mid_tom_sound.wav', self.sample_rate, mid_tom)
+        return mid_tom
+
+
 if __name__ == '__main__':
-    woodblock = WoodBlock()
-    woodblock.generate_woodblock(880, 2.25, 80,duration=150)
+    pass
+    # woodblock = WoodBlock()
+    # woodblock.generate_woodblock(880, 2.25, 80,duration=150)
+    # mid_tom_sound = MidTom()
+    # mid_tom_sound.generate_mid_tom_sound(175, duration=150)
