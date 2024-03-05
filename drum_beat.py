@@ -273,6 +273,27 @@ class Bongo:
         return bongo_sound
 
 
+class Tabla:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_drum_sound(self, frequency, duration):
+        num_samples = int((self.sample_rate / 1000) * duration)
+        time = np.linspace(0, duration / 1000, num_samples)
+        bass_wave = np.sin(2 * np.pi * frequency * time)
+        treble_wave = np.sin(2 * np.pi * (frequency * 1.6) * time)
+
+        noise = np.random.normal(0, 0.05, len(time))
+        tabla_sound = (bass_wave + treble_wave) * (1 - 0.4 * time) + noise * (1 - 0.5 * time)
+
+        sos = butter(4, 1000, 'lp', fs=self.sample_rate, output='sos')
+        tabla_sound = sosfilt(sos, tabla_sound)
+
+        tabla_sound /= np.max(np.abs(tabla_sound))
+        wavfile.write('tabla.wav', self.sample_rate, tabla_sound)
+
+        return tabla_sound
+
 # Next I will try to implement a sequencer.
 # One way is to generate a random sequence and play the sound
 # Before that I found a way while browsing online that I can implement a panning algorithm and then make sure the sound
@@ -286,3 +307,5 @@ class Panning:
 if __name__ == '__main__':
     bongo = Bongo()
     bongo.generate_bongo_sound(150)
+    tabla = Tabla()
+    tabla.generate_drum_sound(150, 150)
