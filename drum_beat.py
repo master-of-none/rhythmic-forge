@@ -273,6 +273,16 @@ class Bongo:
         return bongo_sound
 
 
+# Next I will try to implement a sequencer.
+# One way is to generate a random sequence and play the sound
+# Before that I found a way while browsing online that I can implement a panning algorithm and then make sure the sound
+# is played correctly.
+
+class Panning:
+    def pann(self):
+        pass
+
+
 if __name__ == '__main__':
     bongo = Bongo()
     bongo.generate_bongo_sound(150)
