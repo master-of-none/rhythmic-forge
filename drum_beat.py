@@ -320,14 +320,11 @@ class Panning:
 
 if __name__ == '__main__':
     pann = Panning()
-    # Define instrument names
     instruments = ['kick_pat', 'snare_pat', 'hihat_pat', 'open_hat_pat', 'wood_block_pat', 'mid_tom_pat']
 
-    # Generate random sequences for each instrument
     random_sequences = {}
     for instrument in instruments:
-        # Determine a random length for the sequence
-        length = random.randint(5, 15)  # You can adjust the range as per your requirement
+        length = random.randint(5, 15)
         random_sequences[instrument] = pann.generate_random_sequence(length)
 
     # Print the randomly generated sequences
