@@ -217,10 +217,38 @@ class Clap:
         return clap_sound
 
 
+class Tambourine:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_smooth_noise(self, duration):
+        num_samples = int((self.sample_rate / 1000) * duration)
+        noise = np.random.normal(0, 0.3, num_samples)
+        return noise
+
+    def generate_jingle(self, frequency, duration):
+        num_samples = int((self.sample_rate / 1000) * duration)
+        time = np.linspace(0, duration / 1000, num_samples)
+        envelope = np.exp(-10 * time)
+        jingle_signal = np.sin(2 * np.pi * frequency * time) * envelope
+        return jingle_signal
+
+    def create_filter(self):
+        sos_band_pass = butter(4, [1000, 8000], 'band', fs=self.sample_rate, output='sos')
+        return sos_band_pass
+
+    def generate_tambourine_sound(self, duration):
+        noise = self.generate_smooth_noise(duration)
+        jingle = self.generate_jingle(3000, duration)
+        tambourine_sound = noise + jingle
+        sos_band_pass = self.create_filter()
+        filtered_tambourine_sound = sosfilt(sos_band_pass, tambourine_sound)
+        tambourine_sound = filtered_tambourine_sound * 1.5
+
+        wavfile.write('tambourine.wav', self.sample_rate, tambourine_sound)
+        return tambourine_sound
+
+
 if __name__ == '__main__':
-    # woodblock = WoodBlock()
-    # woodblock.generate_woodblock(880, 2.25, 80,duration=150)
-    # mid_tom_sound = MidTom()
-    # mid_tom_sound.generate_mid_tom_sound(175, duration=150)
-    clap = Clap()
-    clap.generate_clap_sound(duration=150)
+    tambourine = Tambourine()
+    tambourine.generate_tambourine_sound(duration=150)
