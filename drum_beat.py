@@ -192,9 +192,34 @@ class MidTom:
         return mid_tom
 
 
+class Clap:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate_noise(self, duration):
+        noise = np.random.random_sample(int((self.sample_rate / 1000) * duration)) * 2 - 1
+        return noise
+
+    def create_filter(self):
+        sos_high_pass = butter(10, 1000, 'hp', fs=self.sample_rate, analog=False, output='sos')
+        sos_low_pass = butter(4, 5000, 'lp', fs=self.sample_rate, analog=False, output='sos')
+        return sos_high_pass, sos_low_pass
+
+    def generate_clap_sound(self, duration):
+        time = np.linspace(1, 0, int((self.sample_rate / 1000) * duration))
+        time = np.power(time, 1.5)
+        noise = self.generate_noise(duration)
+        sos_high_pass, sos_low_pass = self.create_filter()
+        filtered_noise = sosfilt(sos_high_pass, noise)
+        filtered_noise = sosfilt(sos_low_pass, filtered_noise)
+        clap_sound = filtered_noise * time * 2
+        # wavfile.write("clap_sound.wav", self.sample_rate, clap_sound)
+        return clap_sound
+
 if __name__ == '__main__':
-    pass
     # woodblock = WoodBlock()
     # woodblock.generate_woodblock(880, 2.25, 80,duration=150)
     # mid_tom_sound = MidTom()
     # mid_tom_sound.generate_mid_tom_sound(175, duration=150)
+    clap = Clap()
+    clap.generate_clap_sound(duration=150)
