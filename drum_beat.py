@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import sounddevice as sd
 from scipy.signal import butter, sosfilt
@@ -294,18 +296,41 @@ class Tabla:
 
         return tabla_sound
 
+
 # Next I will try to implement a sequencer.
 # One way is to generate a random sequence and play the sound
 # Before that I found a way while browsing online that I can implement a panning algorithm and then make sure the sound
 # is played correctly.
 
 class Panning:
-    def pann(self):
-        pass
+    def pann(self, x, angle):
+        cos_a = np.cos(angle)
+        sin_a = np.sin(angle)
+        stereo_factor = np.sqrt(2) / 2.0
+
+        left = stereo_factor * (cos_a - sin_a) * x
+        right = stereo_factor * (cos_a + sin_a) * x
+
+        return np.column_stack((left, right))
+
+    def generate_random_sequence(self, length):
+        sequence = ''.join(random.choice(['^', '_']) for _ in range(length))
+        return sequence
 
 
 if __name__ == '__main__':
-    bongo = Bongo()
-    bongo.generate_bongo_sound(150)
-    tabla = Tabla()
-    tabla.generate_drum_sound(150, 150)
+    pann = Panning()
+    # Define instrument names
+    instruments = ['kick_pat', 'snare_pat', 'hihat_pat', 'open_hat_pat', 'wood_block_pat', 'mid_tom_pat']
+
+    # Generate random sequences for each instrument
+    random_sequences = {}
+    for instrument in instruments:
+        # Determine a random length for the sequence
+        length = random.randint(5, 15)  # You can adjust the range as per your requirement
+        random_sequences[instrument] = pann.generate_random_sequence(length)
+
+    # Print the randomly generated sequences
+    print("Randomly generated sequences:")
+    for instrument, sequence in random_sequences.items():
+        print(f"{instrument}: {sequence}")
