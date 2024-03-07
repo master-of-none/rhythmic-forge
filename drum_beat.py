@@ -1,5 +1,4 @@
 import random
-import time
 import numpy as np
 import sounddevice as sd
 from scipy.signal import butter, sosfilt
@@ -322,7 +321,7 @@ class Panning:
 class GenerateBeat:
     def __init__(self, duration=150):
         self.duration = duration
-        self.repetition = 15
+        self.repetition = 3
         self.panning_values = [0.03, 0, -15, 15, -35, 35]
         self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
         self.pann = Panning()
@@ -359,7 +358,9 @@ class GenerateBeat:
             [wood_block_sound if char == '^' else self.pause(mid_tom_sound) for char in mid_tom_pat])
 
         instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
-        instrument_seq = random.shuffle(instrument_seq)
+        #print(instrument_seq)
+        random.shuffle(instrument_seq)
+        # print(instrument_seq)
         beats = self.panning_mixture(instrument_seq)
         return beats
 
@@ -378,16 +379,9 @@ class GenerateBeat:
 
 
 if __name__ == '__main__':
-    generate_sound = GenerateBeat()
-    beats = generate_sound.generate_sound()
-    sample_rate = 44100
-    # Play the beat
-    start_time = time.time()
-    sd.play(beats, sample_rate, blocksize=1024)
-
-    # Keep track of elapsed time
-    while time.time() - start_time < 5:
-        pass
-
-    # Stop the playback
-    sd.stop()
+    pass
+    # generate_sound = GenerateBeat()
+    # beat_value = generate_sound.generate_sound()
+    # sample_rate = 44100
+    # sd.play(beat_value, sample_rate, blocksize=1024)
+    # sd.wait()
