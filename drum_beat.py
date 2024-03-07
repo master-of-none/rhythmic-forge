@@ -1,5 +1,5 @@
 import random
-
+import time
 import numpy as np
 import sounddevice as sd
 from scipy.signal import butter, sosfilt
@@ -155,8 +155,8 @@ class WoodBlock:
         envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
         woodblock = 1 * np.sin(2 * np.pi * frequency_modulation * actual_time) * envelope
-        wavfile.write('woodblock.wav', self.sample_rate, woodblock)
-
+        #wavfile.write('woodblock.wav', self.sample_rate, woodblock)
+        return woodblock
 
 # Mid-Tom
 # It took me 2 days to figure out woodblock and Mid-Tom and finally an algorithm kicked in after hours of debugging.
@@ -318,16 +318,39 @@ class Panning:
         return sequence
 
 
-if __name__ == '__main__':
-    pann = Panning()
-    instruments = ['kick_pat', 'snare_pat', 'hihat_pat', 'open_hat_pat', 'wood_block_pat', 'mid_tom_pat']
+class GenerateBeat:
+    def __init__(self, duration=150):
+        self.duration = duration
 
-    random_sequences = {}
-    for instrument in instruments:
+    def pause(self, note):
+        paused = np.zeros_like(note)
+        return paused
+
+    def generate_sound(self):
+        pann = Panning()
         length = random.randint(5, 15)
-        random_sequences[instrument] = pann.generate_random_sequence(length)
+        kick_pat = pann.generate_random_sequence(length)
+        snare_pat = pann.generate_random_sequence(length)
+        hihat_pat = pann.generate_random_sequence(length)
+        open_hat_pat = pann.generate_random_sequence(length)
+        wood_block_pat = pann.generate_random_sequence(length)
+        mid_tom_pat = pann.generate_random_sequence(length)
 
-    # Print the randomly generated sequences
-    print("Randomly generated sequences:")
-    for instrument, sequence in random_sequences.items():
-        print(f"{instrument}: {sequence}")
+        kick_sound = Kick().generate_kick_sound(30, self.duration)
+        snare_sound = Snare().generate_snare_sound(250 ,self.duration)
+        hihat_sound = HiHat().generate_hi_hat(self.duration)
+        open_hat_sound = OpenHat().generate_open_hat(self.duration)
+        wood_block_sound = WoodBlock().generate_woodblock(880, 2.25, 80, self.duration)
+        mid_tom_sound = MidTom().generate_mid_tom_sound(175, self.duration)
+
+        kick_seq = np.concatenate([kick_sound if char == '^' else self.pause(kick_sound) for char in kick_pat])
+        snare_seq = np.concatenate([snare_sound if char == '^' else self.pause(snare_sound) for char in snare_pat])
+        hihat_seq = np.concatenate([hihat_sound if char == '^' else self.pause(hihat_sound) for char in hihat_pat])
+        open_hat_seq = np.concatenate([open_hat_sound if char == '^' else self.pause(open_hat_sound) for char in open_hat_pat])
+        wood_block_seq = np.concatenate([wood_block_sound if char == '^' else self.pause(wood_block_sound) for char in wood_block_pat])
+        mid_tom_seq = np.concatenate([wood_block_sound if char == '^' else self.pause(mid_tom_sound) for char in mid_tom_pat])
+
+
+if __name__ == '__main__':
+    generate_sound = GenerateBeat()
+    generate_sound.generate_sound()
