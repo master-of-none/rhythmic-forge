@@ -321,7 +321,7 @@ class Panning:
 class GenerateBeat:
     def __init__(self, duration=150):
         self.duration = duration
-        self.repetition = 3
+        self.repetition = 25
         self.panning_values = [0.03, 0, -15, 15, -35, 35]
         self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
         self.pann = Panning()
