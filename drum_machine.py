@@ -28,6 +28,7 @@ class DrumMachine:
         self.open_hat = OpenHat()
         self.setup_gui()
         self.root.mainloop()
+        # self.generate_beat = GenerateBeat()
 
     def setup_gui(self):
         self.play_button = tk.Button(self.root, text="Play Kick Sound", command=self.play_kick)
@@ -40,6 +41,9 @@ class DrumMachine:
         self.play_button.pack()
 
         self.play_button = tk.Button(self.root, text="Play OpenHat Sound", command=self.play_open_hat)
+        self.play_button.pack()
+
+        self.play_button = tk.Button(self.root, text="Play Random Beat", command=self.play_beat)
         self.play_button.pack()
 
         self.quit_button = tk.Button(self.root, text="Quit", command=self.quit)
@@ -67,5 +71,12 @@ class DrumMachine:
         open_hat = self.open_hat.generate_open_hat(self.duration)
         sd.play(open_hat, self.samplerate)
         sd.wait()
+
+    def play_beat(self):
+        generate_beat = GenerateBeat()
+        beat = generate_beat.generate_sound()
+        sd.play(beat, self.samplerate)
+        sd.wait()
+
     def quit(self):
         self.root.destroy()
