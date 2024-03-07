@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import sounddevice as sd
 from scipy.signal import butter, sosfilt
@@ -153,7 +154,8 @@ class WoodBlock:
         envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
         woodblock = 1 * np.sin(2 * np.pi * frequency_modulation * actual_time) * envelope
-        wavfile.write('woodblock.wav', self.sample_rate, woodblock)
+        # wavfile.write('woodblock.wav', self.sample_rate, woodblock)
+        return woodblock
 
 
 # Mid-Tom
@@ -294,18 +296,92 @@ class Tabla:
 
         return tabla_sound
 
+
 # Next I will try to implement a sequencer.
 # One way is to generate a random sequence and play the sound
 # Before that I found a way while browsing online that I can implement a panning algorithm and then make sure the sound
 # is played correctly.
 
 class Panning:
-    def pann(self):
-        pass
+    def pann(self, x, angle):
+        cos_a = np.cos(angle)
+        sin_a = np.sin(angle)
+        stereo_factor = np.sqrt(2) / 2.0
+
+        left = stereo_factor * (cos_a - sin_a) * x
+        right = stereo_factor * (cos_a + sin_a) * x
+
+        return np.column_stack((left, right))
+
+    def generate_random_sequence(self, length):
+        sequence = ''.join(random.choice(['^', '_']) for _ in range(length))
+        return sequence
+
+
+class GenerateBeat:
+    def __init__(self, duration=150):
+        self.duration = duration
+        self.repetition = 25
+        self.panning_values = [0.03, 0, -15, 15, -35, 35]
+        self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
+        self.pann = Panning()
+
+    def pause(self, note):
+        paused = np.zeros_like(note)
+        return paused
+
+    def generate_sound(self):
+
+        length = random.randint(5, 15)
+        kick_pat = self.pann.generate_random_sequence(length)
+        snare_pat = self.pann.generate_random_sequence(length)
+        hihat_pat = self.pann.generate_random_sequence(length)
+        open_hat_pat = self.pann.generate_random_sequence(length)
+        wood_block_pat = self.pann.generate_random_sequence(length)
+        mid_tom_pat = self.pann.generate_random_sequence(length)
+
+        kick_sound = Kick().generate_kick_sound(30, self.duration)
+        snare_sound = Snare().generate_snare_sound(250, self.duration)
+        hihat_sound = HiHat().generate_hi_hat(self.duration)
+        open_hat_sound = OpenHat().generate_open_hat(self.duration)
+        wood_block_sound = WoodBlock().generate_woodblock(880, 2.25, 80, self.duration)
+        mid_tom_sound = MidTom().generate_mid_tom_sound(175, self.duration)
+
+        kick_seq = np.concatenate([kick_sound if char == '^' else self.pause(kick_sound) for char in kick_pat])
+        snare_seq = np.concatenate([snare_sound if char == '^' else self.pause(snare_sound) for char in snare_pat])
+        hihat_seq = np.concatenate([hihat_sound if char == '^' else self.pause(hihat_sound) for char in hihat_pat])
+        open_hat_seq = np.concatenate(
+            [open_hat_sound if char == '^' else self.pause(open_hat_sound) for char in open_hat_pat])
+        wood_block_seq = np.concatenate(
+            [wood_block_sound if char == '^' else self.pause(wood_block_sound) for char in wood_block_pat])
+        mid_tom_seq = np.concatenate(
+            [wood_block_sound if char == '^' else self.pause(mid_tom_sound) for char in mid_tom_pat])
+
+        instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
+        #print(instrument_seq)
+        random.shuffle(instrument_seq)
+        # print(instrument_seq)
+        beats = self.panning_mixture(instrument_seq)
+        return beats
+
+    def panning_mixture(self, instrument_seq):
+        panned_instruments = []
+        for inst, pan_val in zip(instrument_seq, self.panning_values):
+            panned_instruments.append(self.pann.pann(inst, pan_val))
+
+        vol_pan_inst = []
+        for inst, vol_mix in zip(panned_instruments, self.volume_mix_values):
+            tiled_sequence = np.tile(inst * vol_mix, (self.repetition, 1))
+            vol_pan_inst.append(tiled_sequence)
+
+        beats = sum(vol_pan_inst)
+        return beats
 
 
 if __name__ == '__main__':
-    bongo = Bongo()
-    bongo.generate_bongo_sound(150)
-    tabla = Tabla()
-    tabla.generate_drum_sound(150, 150)
+    pass
+    # generate_sound = GenerateBeat()
+    # beat_value = generate_sound.generate_sound()
+    # sample_rate = 44100
+    # sd.play(beat_value, sample_rate, blocksize=1024)
+    # sd.wait()
