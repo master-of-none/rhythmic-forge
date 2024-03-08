@@ -400,6 +400,8 @@ class GenerateBeat:
         return beats
 
 
+# Must try to add some effects like reverb and EQ
+
 if __name__ == '__main__':
     pass
     # generate_sound = GenerateBeat()
