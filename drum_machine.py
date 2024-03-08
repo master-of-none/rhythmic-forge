@@ -38,12 +38,12 @@ class DrumMachine:
         self.quit_button.pack()
 
     def play_beat_1(self):
-        generate_beat = GenerateBeat()
+        generate_beat = GenerateBeat(repetition=10)
         beat1, beat2 = generate_beat.generate_sound()
         sd.play(beat1, self.samplerate)
 
     def play_beat_2(self):
-        generate_beat = GenerateBeat()
+        generate_beat = GenerateBeat(repetition=10)
         beat1, beat2 = generate_beat.generate_sound()
         sd.play(beat2, self.samplerate)
 

@@ -22,7 +22,7 @@ button_rects = [pygame.Rect(pos[0], pos[1], button_width, button_height) for pos
 
 running = True
 instrument_sequence = []
-
+repetition_counter = 0
 while running:
     screen.fill(WHITE)
 
@@ -54,11 +54,12 @@ while running:
                             sd.play(beat, samplerate=44100)
                             sd.wait()
 
+                        repetition_counter += 1
                         #instrument_sequence.append(beat)
 
                 if play_button_rect.collidepoint(event.pos):
                     # print(instrument_sequence)
-                    beats = GenerateBeat().panning_mixture(instrument_sequence)
+                    beats = GenerateBeat(repetition=repetition_counter).panning_mixture(instrument_sequence)
                     #
                     # #print(beats)
                     # beats = sum(instrument_sequence)

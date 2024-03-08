@@ -6,3 +6,4 @@ pycparser~=2.21
 sounddevice~=0.4.6
 tk
 scipy~=1.12.0
+pygame~=2.5.2

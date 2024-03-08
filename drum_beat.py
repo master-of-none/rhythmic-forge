@@ -319,9 +319,9 @@ class Panning:
 
 
 class GenerateBeat:
-    def __init__(self, duration=150):
+    def __init__(self, repetition, duration=150):
         self.duration = duration
-        self.repetition = 25
+        self.repetition = repetition
         self.panning_values = [0.03, 0, -15, 15, -35, 35]
         self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
         self.pann = Panning()
@@ -387,6 +387,7 @@ class GenerateBeat:
         return beats, beats_2
 
     def panning_mixture(self, instrument_seq):
+        print(instrument_seq)
         panned_instruments = []
         for inst, pan_val in zip(instrument_seq, self.panning_values):
             panned_instruments.append(self.pann.pann(inst, pan_val))
