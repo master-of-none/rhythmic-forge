@@ -25,7 +25,10 @@ class DrumMachine:
         # self.generate_beat = GenerateBeat()
 
     def setup_gui(self):
-        self.play_button = tk.Button(self.root, text="Play Random Beat", command=self.play_beat)
+        self.play_button = tk.Button(self.root, text="Play Random Beat", command=self.play_beat_1)
+        self.play_button.pack()
+
+        self.play_button = tk.Button(self.root, text="Play Random Beat 2", command=self.play_beat_2)
         self.play_button.pack()
 
         self.stop_button = tk.Button(self.root, text="Stop the Beat", command=self.stop_beat)
@@ -34,10 +37,15 @@ class DrumMachine:
         self.quit_button = tk.Button(self.root, text="Quit", command=self.quit)
         self.quit_button.pack()
 
-    def play_beat(self):
+    def play_beat_1(self):
         generate_beat = GenerateBeat()
-        beat = generate_beat.generate_sound()
-        sd.play(beat, self.samplerate)
+        beat1, beat2 = generate_beat.generate_sound()
+        sd.play(beat1, self.samplerate)
+
+    def play_beat_2(self):
+        generate_beat = GenerateBeat()
+        beat1, beat2 = generate_beat.generate_sound()
+        sd.play(beat2, self.samplerate)
 
     def stop_beat(self):
         sd.stop()

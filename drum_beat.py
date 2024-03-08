@@ -340,12 +340,24 @@ class GenerateBeat:
         wood_block_pat = self.pann.generate_random_sequence(length)
         mid_tom_pat = self.pann.generate_random_sequence(length)
 
+        # Next set of instruments
+        clap_pat = self.pann.generate_random_sequence(length)
+        tambourine_pat = self.pann.generate_random_sequence(length)
+        bongo_pat = self.pann.generate_random_sequence(length)
+        tabla_pat = self.pann.generate_random_sequence(length)
+
         kick_sound = Kick().generate_kick_sound(30, self.duration)
         snare_sound = Snare().generate_snare_sound(250, self.duration)
         hihat_sound = HiHat().generate_hi_hat(self.duration)
         open_hat_sound = OpenHat().generate_open_hat(self.duration)
         wood_block_sound = WoodBlock().generate_woodblock(880, 2.25, 80, self.duration)
         mid_tom_sound = MidTom().generate_mid_tom_sound(175, self.duration)
+
+        # Next set of sounds
+        clap_sound = Clap().generate_clap_sound(self.duration)
+        tambourine_sound = Tambourine().generate_tambourine_sound(self.duration)
+        bongo_sound = Bongo().generate_bongo_sound(self.duration)
+        tabla_sound = Tabla().generate_drum_sound(150, self.duration)
 
         kick_seq = np.concatenate([kick_sound if char == '^' else self.pause(kick_sound) for char in kick_pat])
         snare_seq = np.concatenate([snare_sound if char == '^' else self.pause(snare_sound) for char in snare_pat])
@@ -357,12 +369,22 @@ class GenerateBeat:
         mid_tom_seq = np.concatenate(
             [wood_block_sound if char == '^' else self.pause(mid_tom_sound) for char in mid_tom_pat])
 
+        # Next set
+        clap_seq = np.concatenate([clap_sound if char == '^' else self.pause(clap_sound) for char in clap_pat])
+        tambourine_seq = np.concatenate([tambourine_sound if char == '^' else self.pause(tambourine_sound) for char in tambourine_pat])
+        bongo_seq = np.concatenate([bongo_sound if char == '^' else self.pause(bongo_sound) for char in bongo_pat])
+        tabla_seq = np.concatenate([tabla_sound if char == '^' else self.pause(tabla_sound) for char in tabla_pat])
+
         instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
         #print(instrument_seq)
         random.shuffle(instrument_seq)
         # print(instrument_seq)
         beats = self.panning_mixture(instrument_seq)
-        return beats
+
+        instrument_seq_2 = [clap_seq, tambourine_seq, bongo_seq, tabla_seq, bongo_seq, tambourine_seq]
+        random.shuffle(instrument_seq_2)
+        beats_2 = self.panning_mixture(instrument_seq_2)
+        return beats, beats_2
 
     def panning_mixture(self, instrument_seq):
         panned_instruments = []
