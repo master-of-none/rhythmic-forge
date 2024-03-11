@@ -424,9 +424,9 @@ class GenerateBeat:
 # Must try to add some effects like reverb and EQ
 
 if __name__ == '__main__':
-    # pass
-    generate_sound = GenerateBeat(repetition=10)
-    beat_value1, beat_value2 = generate_sound.generate_sound()
-    sample_rate = 44100
-    sd.play(beat_value1, sample_rate, blocksize=1024)
-    sd.wait()
+    pass
+    # generate_sound = GenerateBeat(repetition=10)
+    # beat_value1, beat_value2 = generate_sound.generate_sound()
+    # sample_rate = 44100
+    # sd.play(beat_value1, sample_rate, blocksize=1024)
+    # sd.wait()
