@@ -325,27 +325,10 @@ class GenerateBeat:
         self.panning_values = [0.03, 0, -15, 15, -35, 35]
         self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
         self.pann = Panning()
-        self.reverb_delay = 0.1
-        self.reverb_gain = 0.5
-
 
     def pause(self, note):
         paused = np.zeros_like(note)
         return paused
-
-    def apply_reverb(self, signal):
-        num_samples = len(signal)
-        delay_samples = int(self.reverb_delay * 44100)
-        buffer_length = delay_samples * 4
-        delay_buffer = np.zeros(buffer_length)
-        output = np.zeros(num_samples)
-
-        for i in range(num_samples):
-            delay_buffer[:-1] = delay_buffer[1:]
-            delay_buffer[-1] = signal[i] + delay_buffer[0] * self.reverb_gain  # Apply feedback
-            output[i] = delay_buffer[0]
-
-        return output
 
     def generate_sound(self):
 
@@ -388,15 +371,13 @@ class GenerateBeat:
 
         # Next set
         clap_seq = np.concatenate([clap_sound if char == '^' else self.pause(clap_sound) for char in clap_pat])
-        tambourine_seq = np.concatenate([tambourine_sound if char == '^' else self.pause(tambourine_sound) for char in tambourine_pat])
+        tambourine_seq = np.concatenate(
+            [tambourine_sound if char == '^' else self.pause(tambourine_sound) for char in tambourine_pat])
         bongo_seq = np.concatenate([bongo_sound if char == '^' else self.pause(bongo_sound) for char in bongo_pat])
         tabla_seq = np.concatenate([tabla_sound if char == '^' else self.pause(tabla_sound) for char in tabla_pat])
 
-        kick_seq_reverb = self.apply_reverb(kick_seq)
-        print(kick_seq_reverb)
-
-        instrument_seq = [kick_seq_reverb, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
-        #print(instrument_seq)
+        instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
+        # print(instrument_seq)
         random.shuffle(instrument_seq)
         # print(instrument_seq)
         beats = self.panning_mixture(instrument_seq)
@@ -421,12 +402,60 @@ class GenerateBeat:
         return beats
 
 
+class Reverb(object):
+    def __init__(self, length):
+        self.length = length
+        self.buffer = [0] * length
+        self.head = 0
+        self.tail = 0
+        self.empty = True
+
+    def enqueue(self, s):
+        assert self.empty or self.head != self.tail
+        self.buffer[self.tail] = s
+        self.tail = (self.tail + 1) % self.length
+        self.empty = False
+
+    def dequeue(self):
+        assert not self.empty
+        s = self.buffer[self.head]
+        self.head = (self.head + 1) % self.length
+        self.empty = self.head == self.tail
+        return s
+
+    def is_empty(self):
+        return self.empty
+
+
+class Reverb_apply:
+    @staticmethod
+    def apply_reverb(signal, delay, wet, reverb):
+        buffer = Reverb(delay)
+        out_signal = []
+        for i, s in enumerate(signal):
+            if i < delay:
+                sdelay = 0
+            else:
+                sdelay = buffer.dequeue()
+            out_signal.append((1 - wet) * s + wet * sdelay)
+            buffer.enqueue((1 - reverb) * s + reverb * sdelay)
+        return np.array(out_signal)
+
+
 # Must try to add some effects like reverb and EQ
 
 if __name__ == '__main__':
-    pass
-    # generate_sound = GenerateBeat(repetition=10)
-    # beat_value1, beat_value2 = generate_sound.generate_sound()
-    # sample_rate = 44100
-    # sd.play(beat_value1, sample_rate, blocksize=1024)
-    # sd.wait()
+    generate_sound = GenerateBeat(repetition=2)
+    beat_value1, beat_value2 = generate_sound.generate_sound()
+    sample_rate = 44100
+    reverb_delay = 100
+    wetness = 0.5
+    reverb_strength = 0.1
+    reverb_sound = Reverb_apply()
+    reverb_beat = reverb_sound.apply_reverb(beat_value1, reverb_delay, wetness, reverb_strength)
+    print("Playing beat")
+    sd.play(beat_value1, sample_rate, blocksize=1024)
+    sd.wait()
+    print("Playing Reverb beat")
+    sd.play(reverb_beat, sample_rate, blocksize=1024)
+    sd.wait()
