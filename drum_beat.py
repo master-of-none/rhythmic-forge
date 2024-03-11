@@ -325,10 +325,27 @@ class GenerateBeat:
         self.panning_values = [0.03, 0, -15, 15, -35, 35]
         self.volume_mix_values = [1, 1, 0.4, 0.35, 0.6, 0.6]
         self.pann = Panning()
+        self.reverb_delay = 0.1
+        self.reverb_gain = 0.5
+
 
     def pause(self, note):
         paused = np.zeros_like(note)
         return paused
+
+    def apply_reverb(self, signal):
+        num_samples = len(signal)
+        delay_samples = int(self.reverb_delay * 44100)
+        buffer_length = delay_samples * 4
+        delay_buffer = np.zeros(buffer_length)
+        output = np.zeros(num_samples)
+
+        for i in range(num_samples):
+            delay_buffer[:-1] = delay_buffer[1:]
+            delay_buffer[-1] = signal[i] + delay_buffer[0] * self.reverb_gain  # Apply feedback
+            output[i] = delay_buffer[0]
+
+        return output
 
     def generate_sound(self):
 
@@ -375,7 +392,10 @@ class GenerateBeat:
         bongo_seq = np.concatenate([bongo_sound if char == '^' else self.pause(bongo_sound) for char in bongo_pat])
         tabla_seq = np.concatenate([tabla_sound if char == '^' else self.pause(tabla_sound) for char in tabla_pat])
 
-        instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
+        kick_seq_reverb = self.apply_reverb(kick_seq)
+        print(kick_seq_reverb)
+
+        instrument_seq = [kick_seq_reverb, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
         #print(instrument_seq)
         random.shuffle(instrument_seq)
         # print(instrument_seq)
@@ -404,9 +424,9 @@ class GenerateBeat:
 # Must try to add some effects like reverb and EQ
 
 if __name__ == '__main__':
-    pass
-    # generate_sound = GenerateBeat()
-    # beat_value = generate_sound.generate_sound()
-    # sample_rate = 44100
-    # sd.play(beat_value, sample_rate, blocksize=1024)
-    # sd.wait()
+    # pass
+    generate_sound = GenerateBeat(repetition=10)
+    beat_value1, beat_value2 = generate_sound.generate_sound()
+    sample_rate = 44100
+    sd.play(beat_value1, sample_rate, blocksize=1024)
+    sd.wait()
