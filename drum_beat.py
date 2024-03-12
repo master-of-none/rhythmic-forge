@@ -445,17 +445,18 @@ class Reverb_apply:
 # Must try to add some effects like reverb and EQ
 
 if __name__ == '__main__':
-    generate_sound = GenerateBeat(repetition=2)
-    beat_value1, beat_value2 = generate_sound.generate_sound()
-    sample_rate = 44100
-    reverb_delay = 100
-    wetness = 0.5
-    reverb_strength = 0.1
-    reverb_sound = Reverb_apply()
-    reverb_beat = reverb_sound.apply_reverb(beat_value1, reverb_delay, wetness, reverb_strength)
-    print("Playing beat")
-    sd.play(beat_value1, sample_rate, blocksize=1024)
-    sd.wait()
-    print("Playing Reverb beat")
-    sd.play(reverb_beat, sample_rate, blocksize=1024)
-    sd.wait()
+    pass
+    # generate_sound = GenerateBeat(repetition=2)
+    # beat_value1, beat_value2 = generate_sound.generate_sound()
+    # sample_rate = 44100
+    # reverb_delay = 100
+    # wetness = 0.5
+    # reverb_strength = 0.1
+    # reverb_sound = Reverb_apply()
+    # reverb_beat = reverb_sound.apply_reverb(beat_value2, reverb_delay, wetness, reverb_strength)
+    # print("Playing beat")
+    # sd.play(beat_value1, sample_rate, blocksize=1024)
+    # sd.wait()
+    # print("Playing Reverb beat")
+    # sd.play(reverb_beat, sample_rate, blocksize=1024)
+    # sd.wait()

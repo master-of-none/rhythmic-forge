@@ -31,6 +31,9 @@ class DrumMachine:
         self.play_button = tk.Button(self.root, text="Play Random Beat 2", command=self.play_beat_2)
         self.play_button.pack()
 
+        self.play_button = tk.Button(self.root, text="Play Reverb Beat 1", command=self.play_reverb)
+        self.play_button.pack()
+
         self.stop_button = tk.Button(self.root, text="Stop the Beat", command=self.stop_beat)
         self.stop_button.pack()
 
@@ -38,15 +41,24 @@ class DrumMachine:
         self.quit_button.pack()
 
     def play_beat_1(self):
-        generate_beat = GenerateBeat(repetition=10)
+        generate_beat = GenerateBeat(repetition=2)
         beat1, beat2 = generate_beat.generate_sound()
         sd.play(beat1, self.samplerate)
 
     def play_beat_2(self):
-        generate_beat = GenerateBeat(repetition=10)
+        generate_beat = GenerateBeat(repetition=2)
         beat1, beat2 = generate_beat.generate_sound()
         sd.play(beat2, self.samplerate)
 
+    def play_reverb(self):
+        generate_beat = GenerateBeat(repetition=2)
+        beat1, beat2 = generate_beat.generate_sound()
+        reverb_delay = 100
+        wetness = 0.5
+        reverb_strength = 0.1
+        reverb_sound = Reverb_apply()
+        reverb_beat = reverb_sound.apply_reverb(beat1, reverb_delay, wetness, reverb_strength)
+        sd.play(reverb_beat, self.samplerate)
     def stop_beat(self):
         sd.stop()
 
