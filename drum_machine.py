@@ -43,12 +43,12 @@ class DrumMachine:
     def play_beat_1(self):
         generate_beat = GenerateBeat(repetition=2)
         beat1, beat2 = generate_beat.generate_sound()
-        sd.play(beat1, self.samplerate)
+        sd.play(beat1.astype(np.int16), self.samplerate)
 
     def play_beat_2(self):
         generate_beat = GenerateBeat(repetition=2)
         beat1, beat2 = generate_beat.generate_sound()
-        sd.play(beat2, self.samplerate)
+        sd.play(beat2.astype(np.int16), self.samplerate)
 
     def play_reverb(self):
         generate_beat = GenerateBeat(repetition=2)
@@ -58,7 +58,7 @@ class DrumMachine:
         reverb_strength = 0.1
         reverb_sound = Reverb_apply()
         reverb_beat = reverb_sound.apply_reverb(beat1, reverb_delay, wetness, reverb_strength)
-        sd.play(reverb_beat, self.samplerate)
+        sd.play(reverb_beat.astype(np.int16), self.samplerate)
     def stop_beat(self):
         sd.stop()
 

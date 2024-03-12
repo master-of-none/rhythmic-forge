@@ -26,8 +26,31 @@ playing = True
 active_length = 0
 active_beat = 0
 beat_changed = True
-
 running = True
+
+# Loading the sounds
+kick = mixer.Sound('generatedSounds/kick.wav')
+snare = mixer.Sound('generatedSounds/snare_sound.wav')
+hi_hat = mixer.Sound('generatedSounds/hi_hat_sound.wav')
+open_hat = mixer.Sound('generatedSounds/open_hat_sound.wav')
+wood_block = mixer.Sound('generatedSounds/woodblock.wav')
+mid_tom = mixer.Sound('generatedSounds/mid_tom_sound.wav')
+
+def play_notes():
+    for i in range(len(clicked)):
+        if clicked[i][active_beat] == 1:
+            if i == 0:
+                kick.play()
+            if i == 1:
+                snare.play()
+            if i == 2:
+                hi_hat.play()
+            if i == 3:
+                open_hat.play()
+            if i == 4:
+                wood_block.play()
+            if i == 5:
+                mid_tom.play()
 
 
 def draw_grid(clicks, beat):
@@ -80,6 +103,10 @@ while running:
     timer.tick(fps)
     screen.fill(black)
     all_box = draw_grid(clicked, active_beat)
+
+    if beat_changed:
+        play_notes()
+        beat_changed = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
