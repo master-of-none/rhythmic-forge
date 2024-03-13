@@ -17,10 +17,8 @@ class Kick:
         sos = butter(2, 300, 'low', fs=self.sample_rate, output='sos')
         filtered = sosfilt(sos, oscillation)
         kick_sound = filtered * 10
-        kick_sound_int16 = (kick_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/kick.wav', self.sample_rate, kick_sound_int16)
-        return kick_sound_int16
-
+        #wavfile.write('generatedSounds/kick.wav', self.sample_rate, kick_sound_int16)
+        return kick_sound
 
 
 # Next is to generate snare sound
@@ -60,9 +58,9 @@ class Snare:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_sine = sosfilt(sos_band_pass, sine)
         snare_sound = (filtered_noise + filtered_sine) * 4
-        snare_sound_int16 = (snare_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write("generatedSounds/snare_sound.wav", self.sample_rate, snare_sound_int16)
-        return snare_sound_int16
+        # snare_sound_int16 = (snare_sound * np.iinfo(np.int16).max).astype(np.int16)
+        #wavfile.write("generatedSounds/snare_sound.wav", self.sample_rate, snare_sound_int16)
+        return snare_sound
 
 
 # Third step is to generate the hi hat sound Steps here are nearly same as snare. First generate the noise,
@@ -98,9 +96,9 @@ class HiHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         hi_hat_sound = filtered_wave_2 * time * 4
-        hi_hat_sound_int16 = (hi_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/hi_hat_sound.wav', self.sample_rate, hi_hat_sound_int16)
-        return hi_hat_sound_int16
+        # hi_hat_sound_int16 = (hi_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
+        # wavfile.write('generatedSounds/hi_hat_sound.wav', self.sample_rate, hi_hat_sound_int16)
+        return hi_hat_sound
 
 
 # Open Hat is similar as Hi hat with some variations in the creating the filter
@@ -135,9 +133,9 @@ class OpenHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         open_hat_sound = filtered_wave_2 * time * 4
-        open_hat_sound_int16 = (open_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/open_hat_sound.wav', self.sample_rate, open_hat_sound_int16)
-        return open_hat_sound_int16
+        # open_hat_sound_int16 = (open_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
+        # wavfile.write('generatedSounds/open_hat_sound.wav', self.sample_rate, open_hat_sound_int16)
+        return open_hat_sound
 
 
 # Wood Block
@@ -161,9 +159,9 @@ class WoodBlock:
         envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
         woodblock = 1 * np.sin(2 * np.pi * frequency_modulation * actual_time) * envelope
-        woodblock_int16 = (woodblock * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/woodblock.wav', self.sample_rate, woodblock_int16)
-        return woodblock_int16
+        # woodblock_int16 = (woodblock * np.iinfo(np.int16).max).astype(np.int16)
+        # wavfile.write('generatedSounds/woodblock.wav', self.sample_rate, woodblock_int16)
+        return woodblock
 
 
 # Mid-Tom
@@ -198,9 +196,9 @@ class MidTom:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_noise_2 = sosfilt(sos_low_pass, filtered_noise)
         mid_tom = sine_sweep + (filtered_noise_2 * time) * 0.085
-        mid_tom_int16 = (mid_tom * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/mid_tom_sound.wav', self.sample_rate, mid_tom_int16)
-        return mid_tom_int16
+
+        # wavfile.write('generatedSounds/mid_tom_sound.wav', self.sample_rate, mid_tom_int16)
+        return mid_tom
 
 
 class Clap:
@@ -225,7 +223,7 @@ class Clap:
         filtered_noise = sosfilt(sos_low_pass, filtered_noise)
         clap_sound = filtered_noise * time * 2
         clap_sound_int16 = (clap_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write("generatedSounds/clap_sound.wav", self.sample_rate, clap_sound_int16)
+        #wavfile.write("generatedSounds/clap_sound.wav", self.sample_rate, clap_sound_int16)
         return clap_sound_int16
 
 
@@ -257,7 +255,7 @@ class Tambourine:
         filtered_tambourine_sound = sosfilt(sos_band_pass, tambourine_sound)
         tambourine_sound = filtered_tambourine_sound * 1.5
         tambourine_sound_int16 = (tambourine_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write("generatedSounds/tambourine.wav", self.sample_rate, tambourine_sound_int16)
+        #wavfile.write("generatedSounds/tambourine.wav", self.sample_rate, tambourine_sound_int16)
         return tambourine_sound_int16
 
 
@@ -284,7 +282,7 @@ class Bongo:
         filtered_bongo_sound = sosfilt(sos_band_pass, bongo_sound)
         bongo_sound = filtered_bongo_sound / np.max(np.abs(filtered_bongo_sound))
         bongo_sound_int16 = (bongo_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/bongo.wav', self.sample_rate, bongo_sound_int16)
+        #wavfile.write('generatedSounds/bongo.wav', self.sample_rate, bongo_sound_int16)
         return bongo_sound_int16
 
 
@@ -306,7 +304,7 @@ class Tabla:
 
         tabla_sound /= np.max(np.abs(tabla_sound))
         tabla_sound_int16 = (tabla_sound * np.iinfo(np.int16).max).astype(np.int16)
-        wavfile.write('generatedSounds/tabla.wav', self.sample_rate, tabla_sound_int16)
+        #wavfile.write('generatedSounds/tabla.wav', self.sample_rate, tabla_sound_int16)
 
         return tabla_sound_int16
 
@@ -402,7 +400,7 @@ class GenerateBeat:
         return beats, beats_2
 
     def panning_mixture(self, instrument_seq):
-        #print(instrument_seq)
+        # print(instrument_seq)
         panned_instruments = []
         for inst, pan_val in zip(instrument_seq, self.panning_values):
             panned_instruments.append(self.pann.pann(inst, pan_val))
@@ -454,6 +452,43 @@ class Reverb_apply:
             out_signal.append((1 - wet) * s + wet * sdelay)
             buffer.enqueue((1 - reverb) * s + reverb * sdelay)
         return np.array(out_signal)
+
+
+class SoundFile:
+    def __init__(self, duration=150):
+        self.duration = duration
+        self.sample_rate = 44100
+
+    def generate_sound_files(self):
+        kick_sound = Kick().generate_kick_sound(30, self.duration)
+        kick_sound_int16 = (kick_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/kick_sound.wav', self.sample_rate, kick_sound_int16)
+
+        snare_sound = Snare().generate_snare_sound(250, self.duration)
+        snare_sound_int16 = (snare_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/snare_sound.wav', self.sample_rate, snare_sound_int16)
+
+        hihat_sound = HiHat().generate_hi_hat(self.duration)
+        hi_hat_sound_int16 = (hihat_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/hi_hat_sound.wav', self.sample_rate, hi_hat_sound_int16)
+
+        open_hat_sound = OpenHat().generate_open_hat(self.duration)
+        open_hat_sound_int16 = (open_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/open_hat_sound.wav', self.sample_rate, open_hat_sound_int16)
+
+        wood_block_sound = WoodBlock().generate_woodblock(880, 2.25, 80, self.duration)
+        woodblock_int16 = (wood_block_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/wood_block_sound.wav', self.sample_rate, woodblock_int16)
+
+        mid_tom_sound = MidTom().generate_mid_tom_sound(175, self.duration)
+        mid_tom_int16 = (mid_tom_sound * np.iinfo(np.int16).max).astype(np.int16)
+        wavfile.write('generatedSounds/mid_tom_sound.wav', self.sample_rate, mid_tom_int16)
+
+        # # Next set of sounds
+        # clap_sound = Clap().generate_clap_sound(self.duration)
+        # tambourine_sound = Tambourine().generate_tambourine_sound(self.duration)
+        # bongo_sound = Bongo().generate_bongo_sound(self.duration)
+        # tabla_sound = Tabla().generate_drum_sound(150, self.duration)
 
 
 if __name__ == '__main__':

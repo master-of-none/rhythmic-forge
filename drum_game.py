@@ -26,18 +26,18 @@ clicked = [[-1 for _ in range(BEATS)] for _ in range(INSTRUMENTS)]
 
 mixer.init()
 sounds = {
-    0: mixer.Sound('generatedSounds/kick.wav'),
+    0: mixer.Sound('generatedSounds/kick_sound.wav'),
     1: mixer.Sound('generatedSounds/snare_sound.wav'),
     2: mixer.Sound('generatedSounds/hi_hat_sound.wav'),
     3: mixer.Sound('generatedSounds/open_hat_sound.wav'),
-    4: mixer.Sound('generatedSounds/woodblock.wav'),
+    4: mixer.Sound('generatedSounds/wood_block_sound.wav'),
     5: mixer.Sound('generatedSounds/mid_tom_sound.wav')
 }
 
 active_beat = 0
-beat_changed = True
-playing = True
-active_length = 0
+beat_change = True
+is_playing = True
+active_beat_length = 0
 
 
 def play_notes():
@@ -86,7 +86,7 @@ while running:
     play_text = label_font.render('Play and Pause', True, WHITE)
     screen.blit(play_text, (50, HEIGHT - 80))
 
-    if playing:
+    if is_playing:
         play_text_2 = label_font.render("Playing", True, WHITE)
     else:
         play_text_2 = label_font.render("Pause", True, WHITE)
@@ -96,9 +96,9 @@ while running:
     clear_button = pygame.draw.rect(screen, GREY, [1150, HEIGHT - 80, 250, 80], 0, 5)
     clear_text = label_font.render("Clear Board", True, WHITE)
     screen.blit(clear_text, (1160, HEIGHT - 50))
-    if beat_changed:
+    if beat_change:
         play_notes()
-        beat_changed = False
+        beat_change = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -113,26 +113,26 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONUP:
             if play_pause.collidepoint(event.pos):
-                if playing:
-                    playing = False
-                elif not playing:
-                    playing = True
+                if is_playing:
+                    is_playing = False
+                elif not is_playing:
+                    is_playing = True
 
             elif clear_button.collidepoint(event.pos):
                 clicked = [[-1 for _ in range(BEATS)] for _ in range(INSTRUMENTS)]
 
     beat_len = 3600 // BPM
-    if playing:
-        if active_length < beat_len:
-            active_length += 1
+    if is_playing:
+        if active_beat_length < beat_len:
+            active_beat_length += 1
         else:
-            active_length = 0
+            active_beat_length = 0
             if active_beat < BEATS - 1:
                 active_beat += 1
-                beat_changed = True
+                beat_change = True
             else:
                 active_beat = 0
-                beat_changed = True
+                beat_change = True
     pygame.display.flip()
 
 pygame.quit()
