@@ -41,13 +41,23 @@ active_beat_length = 0
 
 
 def play_notes():
+    """Plays the notes based on the current beat."""
     for i in range(INSTRUMENTS):
         if clicked[i][active_beat] == 1:
             sounds[i].play()
 
 
 def draw_grid(clicks, beat):
+    """
+        Draws the grid for the beat maker.
 
+        Args:
+            clicks (list): A 2D list representing the clicks on the grid.
+            beat (int): The active beat.
+
+        Returns:
+            list: A list of rectangles representing the boxes in the grid.
+        """
     for i in range(INSTRUMENTS):
         pygame.draw.line(screen, RED, (0, (i * 100) + 100), (200, (i * 100) + 100), 2)
 

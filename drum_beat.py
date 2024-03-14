@@ -6,6 +6,16 @@ from scipy.io import wavfile
 
 
 class Kick:
+    """
+     A class for generating kick drum sounds.
+
+     Attributes:
+         sample_rate (int): The sample rate of the sound.
+
+     Methods:
+         generate_kick_sound(frequency, duration): Generate a kick drum sound.
+     """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -17,17 +27,23 @@ class Kick:
         sos = butter(2, 300, 'low', fs=self.sample_rate, output='sos')
         filtered = sosfilt(sos, oscillation)
         kick_sound = filtered * 10
-        #wavfile.write('generatedSounds/kick.wav', self.sample_rate, kick_sound_int16)
         return kick_sound
 
 
-# Next is to generate snare sound
-# For this what I can do is generate a noise with an envelope, generate a sine wave with an envelope
-# Make 2 high pass filters (Must think more about this), pass noise and sine to filter,
-# Add up the filtered noises for generating snare sound. OOFF!!!
-
-
 class Snare:
+    """
+    A class for generating snare drum sounds.
+
+    Attributes:
+        sample_rate (int): The sample rate of the sound.
+
+    Methods:
+        generate_noise(duration): Generate noise for the snare.
+        generate_sine(frequency, duration): Generate a sine wave for the snare.
+        create_filter(): Create filters for processing snare sounds.
+        generate_snare_sound(frequency, duration): Generate a snare drum sound.
+    """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -35,7 +51,6 @@ class Snare:
         time = np.linspace(0, 1, int((self.sample_rate / 1000) * duration))
         noise = np.random.random_sample(int((self.sample_rate / 1000) * duration)) * 2 - 1
         envelope = np.power(0.5, 12.5 * time)
-        # wavfile.write('noise.wav', self.sample_rate, noise * envelope)
         return noise * envelope
 
     def generate_sine(self, frequency, duration):
@@ -58,16 +73,23 @@ class Snare:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_sine = sosfilt(sos_band_pass, sine)
         snare_sound = (filtered_noise + filtered_sine) * 4
-        # snare_sound_int16 = (snare_sound * np.iinfo(np.int16).max).astype(np.int16)
-        #wavfile.write("generatedSounds/snare_sound.wav", self.sample_rate, snare_sound_int16)
         return snare_sound
 
 
-# Third step is to generate the hi hat sound Steps here are nearly same as snare. First generate the noise,
-# Hi hat uses square tone hence can generate square wave, create a filter and finally figure out what to do with
-# filtered signals
-
 class HiHat:
+    """
+     A class for generating hi-hat sounds.
+
+     Attributes:
+         sample_rate (int): The sample rate of the sound.
+
+     Methods:
+         generate_noise(duration): Generate noise for the hi-hat.
+         generate_square_tone(frequency, duration): Generate a square tone for the hi-hat.
+         create_filter(): Create filters for processing hi-hat sounds.
+         generate_hi_hat(duration): Generate a hi-hat sound.
+     """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -96,15 +118,23 @@ class HiHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         hi_hat_sound = filtered_wave_2 * time * 4
-        # hi_hat_sound_int16 = (hi_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
-        # wavfile.write('generatedSounds/hi_hat_sound.wav', self.sample_rate, hi_hat_sound_int16)
         return hi_hat_sound
 
 
-# Open Hat is similar as Hi hat with some variations in the creating the filter
-# Most functions are same with some variations, implementing initial version
-
 class OpenHat:
+    """
+      A class for generating open hi-hat sounds.
+
+      Attributes:
+          sample_rate (int): The sample rate of the sound.
+
+      Methods:
+          generate_noise(duration): Generate noise for the open hi-hat.
+          generate_square_tone(frequency, duration): Generate a square tone for the open hi-hat.
+          create_filter(): Create filters for processing open hi-hat sounds.
+          generate_open_hat(duration): Generate an open hi-hat sound.
+      """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -133,16 +163,21 @@ class OpenHat:
         filtered_wave_1 = sosfilt(sos_high_pass_1, high_noise)
         filtered_wave_2 = sosfilt(sos_high_pass_2, filtered_wave_1)
         open_hat_sound = filtered_wave_2 * time * 4
-        # open_hat_sound_int16 = (open_hat_sound * np.iinfo(np.int16).max).astype(np.int16)
-        # wavfile.write('generatedSounds/open_hat_sound.wav', self.sample_rate, open_hat_sound_int16)
         return open_hat_sound
 
 
-# Wood Block
-# This sound seems difficult to generate, I have no clue as if now how to work on this
-# I have to use sine or square tone to generate. Probably need to watch YouTube to understand more about woodblock
-
 class WoodBlock:
+    """
+       A class for generating woodblock sounds.
+
+       Attributes:
+           sample_rate (int): The sample rate of the sound.
+
+       Methods:
+           generate_a_wave(frequency, duration): Generate a sine wave.
+           generate_woodblock(frequency, ratio, amount, duration): Generate a woodblock sound.
+       """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -159,14 +194,23 @@ class WoodBlock:
         envelope = np.power(0.5, 25 * normalized_time)
         actual_time = np.arange(int((self.sample_rate / 1000) * duration)) / self.sample_rate
         woodblock = 1 * np.sin(2 * np.pi * frequency_modulation * actual_time) * envelope
-        # woodblock_int16 = (woodblock * np.iinfo(np.int16).max).astype(np.int16)
-        # wavfile.write('generatedSounds/woodblock.wav', self.sample_rate, woodblock_int16)
         return woodblock
 
 
-# Mid-Tom
-# It took me 2 days to figure out woodblock and Mid-Tom and finally an algorithm kicked in after hours of debugging.
 class MidTom:
+    """
+    A class for generating mid-tom sounds.
+
+    Attributes:
+        sample_rate (int): The sample rate of the sound.
+
+    Methods:
+        generate_noise(duration): Generate noise for the mid-tom.
+        create_filter(): Create filters for processing mid-tom sounds.
+        generate_sine_sweep(duration, start_frequency, end_frequency): Generate a sine sweep.
+        generate_mid_tom_sound(frequency, duration): Generate a mid-tom sound.
+    """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -196,12 +240,22 @@ class MidTom:
         filtered_noise = sosfilt(sos_high_pass, noise)
         filtered_noise_2 = sosfilt(sos_low_pass, filtered_noise)
         mid_tom = sine_sweep + (filtered_noise_2 * time) * 0.085
-
-        # wavfile.write('generatedSounds/mid_tom_sound.wav', self.sample_rate, mid_tom_int16)
         return mid_tom
 
 
 class Clap:
+    """
+     A class for generating clap sounds.
+
+     Attributes:
+         sample_rate (int): The sample rate of the sound.
+
+     Methods:
+         generate_noise(duration): Generate noise for the clap.
+         create_filter(): Create filters for processing clap sounds.
+         generate_clap_sound(duration): Generate a clap sound.
+     """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -223,11 +277,23 @@ class Clap:
         filtered_noise = sosfilt(sos_low_pass, filtered_noise)
         clap_sound = filtered_noise * time * 2
         clap_sound_int16 = (clap_sound * np.iinfo(np.int16).max).astype(np.int16)
-        #wavfile.write("generatedSounds/clap_sound.wav", self.sample_rate, clap_sound_int16)
         return clap_sound_int16
 
 
 class Tambourine:
+    """
+     A class for generating tambourine sounds.
+
+     Attributes:
+         sample_rate (int): The sample rate of the sound.
+
+     Methods:
+         generate_smooth_noise(duration): Generate smooth noise for the tambourine.
+         generate_jingle(frequency, duration): Generate a jingle sound.
+         create_filter(): Create filters for processing tambourine sounds.
+         generate_tambourine_sound(duration): Generate a tambourine sound.
+     """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -255,11 +321,22 @@ class Tambourine:
         filtered_tambourine_sound = sosfilt(sos_band_pass, tambourine_sound)
         tambourine_sound = filtered_tambourine_sound * 1.5
         tambourine_sound_int16 = (tambourine_sound * np.iinfo(np.int16).max).astype(np.int16)
-        #wavfile.write("generatedSounds/tambourine.wav", self.sample_rate, tambourine_sound_int16)
         return tambourine_sound_int16
 
 
 class Bongo:
+    """
+       A class for generating bongo sounds.
+
+       Attributes:
+           sample_rate (int): The sample rate of the sound.
+
+       Methods:
+           generate_tone(frequency, duration): Generate a tone for the bongo.
+           create_filter(): Create filters for processing bongo sounds.
+           generate_bongo_sound(duration): Generate a bongo sound.
+       """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -282,11 +359,20 @@ class Bongo:
         filtered_bongo_sound = sosfilt(sos_band_pass, bongo_sound)
         bongo_sound = filtered_bongo_sound / np.max(np.abs(filtered_bongo_sound))
         bongo_sound_int16 = (bongo_sound * np.iinfo(np.int16).max).astype(np.int16)
-        #wavfile.write('generatedSounds/bongo.wav', self.sample_rate, bongo_sound_int16)
         return bongo_sound_int16
 
 
 class Tabla:
+    """
+       A class for generating tabla sounds.
+
+       Attributes:
+           sample_rate (int): The sample rate of the sound.
+
+       Methods:
+           generate_drum_sound(frequency, duration): Generate a tabla drum sound.
+       """
+
     def __init__(self, sample_rate=44100):
         self.sample_rate = sample_rate
 
@@ -304,17 +390,18 @@ class Tabla:
 
         tabla_sound /= np.max(np.abs(tabla_sound))
         tabla_sound_int16 = (tabla_sound * np.iinfo(np.int16).max).astype(np.int16)
-        #wavfile.write('generatedSounds/tabla.wav', self.sample_rate, tabla_sound_int16)
-
         return tabla_sound_int16
 
 
-# Next I will try to implement a sequencer.
-# One way is to generate a random sequence and play the sound
-# Before that I found a way while browsing online that I can implement a panning algorithm and then make sure the sound
-# is played correctly.
-
 class Panning:
+    """
+       A class for panning audio signals.
+
+       Methods:
+           pann(x, angle): Apply panning to an audio signal.
+           generate_random_sequence(length): Generate a random panning sequence.
+       """
+
     def pann(self, x, angle):
         cos_a = np.cos(angle)
         sin_a = np.sin(angle)
@@ -331,6 +418,19 @@ class Panning:
 
 
 class GenerateBeat:
+    """
+       A class for generating beats.
+
+       Attributes:
+           repetition (int): Number of repetitions for each beat.
+           duration (int): Duration of each beat.
+
+       Methods:
+           pause(note): Generate a pause in the beat.
+           generate_sound(): Generate a beat sequence.
+           panning_mixture(instrument_seq): Mix and pan instruments.
+       """
+
     def __init__(self, repetition, duration=150):
         self.duration = duration
         self.repetition = repetition
@@ -389,9 +489,7 @@ class GenerateBeat:
         tabla_seq = np.concatenate([tabla_sound if char == '^' else self.pause(tabla_sound) for char in tabla_pat])
 
         instrument_seq = [kick_seq, snare_seq, hihat_seq, open_hat_seq, wood_block_seq, mid_tom_seq]
-        # print(instrument_seq)
         random.shuffle(instrument_seq)
-        # print(instrument_seq)
         beats = self.panning_mixture(instrument_seq)
 
         instrument_seq_2 = [clap_seq, tambourine_seq, bongo_seq, tabla_seq, bongo_seq, tambourine_seq]
@@ -400,7 +498,6 @@ class GenerateBeat:
         return beats, beats_2
 
     def panning_mixture(self, instrument_seq):
-        # print(instrument_seq)
         panned_instruments = []
         for inst, pan_val in zip(instrument_seq, self.panning_values):
             panned_instruments.append(self.pann.pann(inst, pan_val))
@@ -415,6 +512,22 @@ class GenerateBeat:
 
 
 class Reverb(object):
+    """
+        A class representing a reverberation effect.
+
+        Attributes:
+            length (int): Length of the reverb buffer.
+            buffer (list): The reverb buffer.
+            head (int): Pointer to the head of the buffer.
+            tail (int): Pointer to the tail of the buffer.
+            empty (bool): Indicates if the buffer is empty.
+
+        Methods:
+            enqueue(s): Add a sample to the buffer.
+            dequeue(): Remove a sample from the buffer.
+            is_empty(): Check if the buffer is empty.
+        """
+
     def __init__(self, length):
         self.length = length
         self.buffer = [0] * length
@@ -440,6 +553,13 @@ class Reverb(object):
 
 
 class Reverb_apply:
+    """
+     A class for applying reverb to audio signals.
+
+     Methods:
+         apply_reverb(signal, delay, wet, reverb): Apply reverb to an audio signal.
+     """
+
     @staticmethod
     def apply_reverb(signal, delay, wet, reverb):
         buffer = Reverb(delay)
@@ -455,6 +575,17 @@ class Reverb_apply:
 
 
 class SoundFile:
+    """
+       A class for generating sound files.
+
+       Attributes:
+           duration (int): Duration of the sound files.
+           sample_rate (int): Sample rate of the sound files.
+
+       Methods:
+           generate_sound_files(): Generate sound files for various percussion instruments.
+       """
+
     def __init__(self, duration=150):
         self.duration = duration
         self.sample_rate = 44100
@@ -493,7 +624,3 @@ class SoundFile:
 
 if __name__ == '__main__':
     pass
-    # generate_beat = GenerateBeat(repetition=2)
-    # beat1, beat2 = generate_beat.generate_sound()
-    # sd.play(beat1.astype(np.int16), samplerate=44100)
-    # sd.wait()
