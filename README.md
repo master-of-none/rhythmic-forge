@@ -68,5 +68,7 @@ You can also open a mixer where you can play different types of drum beats in a 
 - Second phase of UI that is mixer implementation was a difficult task.
 - Some of the traditional sounds like tambourine and tabla still have static noise.
 
+## Link to Presentation
+[Click for Video](https://github.com/master-of-none/rhythmic-forge/blob/main/Presentation.mp4)
 ## Sources
-- Sources is in a different md file ```sources.md```. [sources](https://github.com/master-of-none/rhythmic-forge/blob/main/sources.md)
+- Sources are in a different md file ```sources.md```. [sources](https://github.com/master-of-none/rhythmic-forge/blob/main/sources.md)
