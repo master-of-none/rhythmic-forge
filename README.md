@@ -69,4 +69,4 @@ You can also open a mixer where you can play different types of drum beats in a 
 - Some of the traditional sounds like tambourine and tabla still have static noise.
 
 ## Sources
-- Sources is in a different md file ```sources.md```. [[sources.md]]
+- Sources is in a different md file ```sources.md```.
