@@ -48,17 +48,17 @@ class DrumMachine:
     def setup_gui(self):
         """Set up the GUI elements."""
 
-        tk.Label(self.root, text="Select a Beat:").pack(pady=10)
+        tk.Label(self.root, text="Choose Your Rhythm:").pack(pady=10)
 
-        tk.Button(self.root, text="Play Random Beat", command=self.play_beat_1).pack(pady=5)
+        tk.Button(self.root, text="Summon a random Groove", command=self.play_beat_1).pack(pady=5)
 
-        tk.Button(self.root, text="Play Random Beat 2", command=self.play_beat_2).pack(pady=5)
+        tk.Button(self.root, text="Evoke a Sonic Storm", command=self.play_beat_2).pack(pady=5)
 
-        tk.Button(self.root, text="Play Reverb Beat 1", command=self.play_reverb).pack(pady=5)
+        tk.Button(self.root, text="Unleash Reverb", command=self.play_reverb).pack(pady=5)
 
-        tk.Button(self.root, text="Stop the Beat", command=self.stop_beat).pack(pady=5)
+        tk.Button(self.root, text="Silence the Symphony", command=self.stop_beat).pack(pady=5)
 
-        tk.Button(self.root, text="Open Pygame Window", command=self.open_pygame_window).pack(pady=5)
+        tk.Button(self.root, text="Explore Pygame", command=self.open_pygame_window).pack(pady=5)
 
         tk.Button(self.root, text="Quit", command=self.quit).pack(pady=5)
 
