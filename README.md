@@ -70,5 +70,9 @@ You can also open a mixer where you can play different types of drum beats in a 
 
 ## Link to Presentation
 [Click for Video](https://github.com/master-of-none/rhythmic-forge/blob/main/Presentation.mp4)
+
+## Example Code
+[![Screenshot-2024-03-15-at-12-40-40-PM.png](https://i.postimg.cc/pXgL99PZ/Screenshot-2024-03-15-at-12-40-40-PM.png)](https://postimg.cc/D8PTHwJJ)
+[![Screenshot-2024-03-15-at-12-40-50-PM.png](https://i.postimg.cc/L4WH7qgp/Screenshot-2024-03-15-at-12-40-50-PM.png)](https://postimg.cc/234RLSxc)
 ## Sources
 - Sources are in a different md file ```sources.md```. [sources](https://github.com/master-of-none/rhythmic-forge/blob/main/sources.md)
