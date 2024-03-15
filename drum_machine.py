@@ -56,6 +56,8 @@ class DrumMachine:
 
         tk.Button(self.root, text="Unleash Reverb", command=self.play_reverb).pack(pady=5)
 
+        tk.Button(self.root, text="Unleash Reverb Part 2", command=self.play_reverb_2).pack(pady=5)
+
         tk.Button(self.root, text="Silence the Symphony", command=self.stop_beat).pack(pady=5)
 
         tk.Button(self.root, text="Explore Pygame", command=self.open_pygame_window).pack(pady=5)
@@ -87,6 +89,17 @@ class DrumMachine:
         reverb_sound = Reverb_apply()
         reverb_beat = reverb_sound.apply_reverb(beat1, reverb_delay, wetness, reverb_strength)
         sd.play(reverb_beat, self.samplerate)
+
+    def play_reverb_2(self):
+        """Play the reverb beat."""
+        generate_beat = GenerateBeat(repetition=2)
+        beat1, beat2 = generate_beat.generate_sound()
+        reverb_delay = 100
+        wetness = 0.5
+        reverb_strength = 0.1
+        reverb_sound = Reverb_apply()
+        reverb_beat = reverb_sound.apply_reverb(beat2, reverb_delay, wetness, reverb_strength)
+        sd.play(reverb_beat.astype(np.int16), self.samplerate)
 
     def stop_beat(self):
         """Stop playing the beat."""
