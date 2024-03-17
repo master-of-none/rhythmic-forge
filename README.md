@@ -13,7 +13,7 @@ You can also open a mixer where you can play different types of drum beats in a 
 ```pip install -r requirements.txt```
 - To run the project, run the main file.
 ```python main.py```
-- This project is fun if run on IDE. It does not mean it's runnable on command line. (Maybe in IDE it is just simpler to run)
+- This project is fun if run on IDE. It does not mean it's not runnable on command line. (Maybe in IDE it is just simpler to run)
 - When you run the project, you will be presented with a window, choose any of the options to play or stop the drum sounds.
 - If you want to be a mixer, click on the game option, and you can customize the beats, using ```mouse``` clicks. Both left and right clicks work.
 - To close the project (pygame and main UI) close the window, there is no button to stop, it is the default ```x``` button.
