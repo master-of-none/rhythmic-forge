@@ -615,12 +615,6 @@ class SoundFile:
         mid_tom_int16 = (mid_tom_sound * np.iinfo(np.int16).max).astype(np.int16)
         wavfile.write('generatedSounds/mid_tom_sound.wav', self.sample_rate, mid_tom_int16)
 
-        # # Next set of sounds
-        # clap_sound = Clap().generate_clap_sound(self.duration)
-        # tambourine_sound = Tambourine().generate_tambourine_sound(self.duration)
-        # bongo_sound = Bongo().generate_bongo_sound(self.duration)
-        # tabla_sound = Tabla().generate_drum_sound(150, self.duration)
-
 
 if __name__ == '__main__':
     pass
